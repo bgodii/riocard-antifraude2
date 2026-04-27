@@ -1,0 +1,37 @@
+<svg width="600" height="600" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g fill="#0A84D6">
+    <text
+      x="22"
+      y="338"
+      font-family="Arial Black, Arial, Helvetica, sans-serif"
+      font-size="154"
+      font-weight="900"
+      letter-spacing="-7"
+    >
+      riocard
+    </text>
+
+    <rect x="194" y="348" width="277" height="84" fill="#0A84D6" />
+
+    <text
+      x="224"
+      y="422"
+      fill="white"
+      font-family="Arial Black, Arial, Helvetica, sans-serif"
+      font-size="88"
+      font-weight="900"
+      letter-spacing="-4"
+    >
+      mais
+    </text>
+
+    <rect x="486" y="103" width="20" height="106" fill="#0A84D6" />
+    <rect x="443" y="146" width="106" height="20" fill="#0A84D6" />
+
+    <rect x="539" y="181" width="12" height="67" fill="#0A84D6" />
+    <rect x="511.5" y="208.5" width="67" height="12" fill="#0A84D6" />
+
+    <rect x="525" y="238" width="12" height="67" fill="#0A84D6" />
+    <rect x="497.5" y="265.5" width="67" height="12" fill="#0A84D6" />
+  </g>
+</svg>
