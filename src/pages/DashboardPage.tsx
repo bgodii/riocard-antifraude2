@@ -297,9 +297,20 @@ export function DashboardPage() {
         <section className="rounded-3xl border border-line bg-white p-5 shadow-sm">
           <div className="mb-4">
             <h2 className="text-lg font-semibold text-panel">Distribuicao de risco</h2>
-            <p className="text-sm text-slate-600">Carteira atual classificada por criticidade.</p>
+            <p className="text-sm text-slate-600">Quantidade de alertas classificados em alto, medio e baixo risco na base atual.</p>
           </div>
-          <GraficoPizza data={riskDistribution} dataKey="value" nameKey="name" />
+          <GraficoPizza
+            data={riskDistribution}
+            dataKey="value"
+            nameKey="name"
+            centerLabel="Total"
+            valueLabel="alertas"
+            descriptions={{
+              'Alto risco': 'Alertas que exigem acao prioritaria por criticidade elevada.',
+              'Medio risco': 'Alertas que merecem acompanhamento e validacao operacional.',
+              'Baixo risco': 'Alertas com menor criticidade, mantidos sob monitoramento.',
+            }}
+          />
         </section>
       </div>
 

@@ -28,6 +28,7 @@ import { FileUpload } from '@/components/FileUpload';
 import { PageHeader } from '@/components/PageHeader';
 import {
   buildFinancialDashboard,
+  demoFinancialEntries,
   buildFinancialFilterOptions,
   demoFinancialRows,
   normalizeFinancialRows,
