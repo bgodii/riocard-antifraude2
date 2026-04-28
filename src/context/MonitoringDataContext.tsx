@@ -1,5 +1,4 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
-import { demoSpreadsheetRows } from '@/data/demoData';
 import type { UploadedDataset } from '@/types/fraud';
 import { analyzeTransactions } from '@/utils/fraudDetection';
 import { normalizeSpreadsheetRows } from '@/utils/spreadsheet';
@@ -11,6 +10,19 @@ interface MonitoringDataContextValue {
 }
 
 const MonitoringDataContext = createContext<MonitoringDataContextValue | null>(null);
+
+function createEmptyDataset(): UploadedDataset {
+  return {
+    rawRows: [],
+    transactions: [],
+    alerts: [],
+    stats: {
+      totalTransactions: 0,
+      averageDailyUsage: 0,
+      uniqueCards: 0,
+    },
+  };
+}
 
 function buildDataset(rows: Record<string, unknown>[]): UploadedDataset {
   const transactions = normalizeSpreadsheetRows(rows);
@@ -25,8 +37,8 @@ function buildDataset(rows: Record<string, unknown>[]): UploadedDataset {
 }
 
 export function MonitoringDataProvider({ children }: { children: ReactNode }) {
-  const [dataset, setDataset] = useState<UploadedDataset>(() => buildDataset(demoSpreadsheetRows));
-  const [sourceLabel, setSourceLabel] = useState('Base demonstrativa carregada');
+  const [dataset, setDataset] = useState<UploadedDataset>(() => createEmptyDataset());
+  const [sourceLabel, setSourceLabel] = useState('Nenhuma base carregada');
 
   const value = useMemo<MonitoringDataContextValue>(
     () => ({

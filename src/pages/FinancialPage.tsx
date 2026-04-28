@@ -29,7 +29,6 @@ import { PageHeader } from '@/components/PageHeader';
 import {
   buildFinancialDashboard,
   buildFinancialFilterOptions,
-  demoFinancialEntries,
   demoFinancialRows,
   normalizeFinancialRows,
 } from '@/services/financial';
@@ -306,10 +305,10 @@ function ForecastChart({ dashboard }: { dashboard: FinancialDashboardData }) {
 }
 
 export function FinancialPage() {
-  const [entries, setEntries] = useState(demoFinancialEntries);
+  const [entries, setEntries] = useState(() => [] as typeof demoFinancialEntries);
   const [filters, setFilters] = useState<FinancialFilterState>(initialFilters);
   const [uploading, setUploading] = useState(false);
-  const [sourceLabel, setSourceLabel] = useState('Base financeira demonstrativa carregada');
+  const [sourceLabel, setSourceLabel] = useState('Nenhuma base financeira carregada');
   const [error, setError] = useState<string | null>(null);
 
   const filterOptions = useMemo(() => buildFinancialFilterOptions(entries), [entries]);
