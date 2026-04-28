@@ -58,6 +58,16 @@ const tooltipStyle = {
   color: '#12345b',
 };
 
+const xAxisProps = {
+  stroke: '#56708f',
+  tickLine: false,
+  axisLine: false,
+  tick: { fontSize: 10 },
+  tickMargin: 12,
+  minTickGap: 18,
+  interval: 'preserveStartEnd' as const,
+};
+
 function formatPercent(value: number) {
   return `${value.toFixed(1)}%`;
 }
@@ -196,7 +206,7 @@ function RevenueChart({ dashboard }: { dashboard: FinancialDashboardData }) {
       <ResponsiveContainer>
         <LineChart data={dashboard.history}>
           <CartesianGrid stroke="rgba(4, 84, 163, 0.10)" vertical={false} />
-          <XAxis dataKey="monthLabel" stroke="#56708f" tickLine={false} axisLine={false} tick={{ fontSize: 11 }} tickMargin={10} />
+          <XAxis dataKey="monthLabel" {...xAxisProps} />
           <YAxis stroke="#56708f" tickLine={false} axisLine={false} />
           <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => formatCurrency(value)} />
           <Line type="monotone" dataKey="revenue" stroke="#0454a3" strokeWidth={3} dot={{ r: 4 }} name="Receita" />
@@ -212,7 +222,7 @@ function CostChart({ dashboard }: { dashboard: FinancialDashboardData }) {
       <ResponsiveContainer>
         <BarChart data={dashboard.costByCategoryChart}>
           <CartesianGrid stroke="rgba(4, 84, 163, 0.10)" vertical={false} />
-          <XAxis dataKey="monthLabel" stroke="#56708f" tickLine={false} axisLine={false} tick={{ fontSize: 11 }} tickMargin={10} />
+          <XAxis dataKey="monthLabel" {...xAxisProps} />
           <YAxis stroke="#56708f" tickLine={false} axisLine={false} />
           <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => formatCurrency(value)} />
           <Legend wrapperStyle={{ color: '#56708f' }} />
@@ -231,7 +241,7 @@ function MarginChart({ dashboard }: { dashboard: FinancialDashboardData }) {
       <ResponsiveContainer>
         <LineChart data={dashboard.history}>
           <CartesianGrid stroke="rgba(4, 84, 163, 0.10)" vertical={false} />
-          <XAxis dataKey="monthLabel" stroke="#56708f" tickLine={false} axisLine={false} tick={{ fontSize: 11 }} tickMargin={10} />
+          <XAxis dataKey="monthLabel" {...xAxisProps} />
           <YAxis stroke="#56708f" tickLine={false} axisLine={false} />
           <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => formatCurrency(value)} />
           <ReferenceLine y={0} stroke="#f59e0b" strokeDasharray="5 5" />
@@ -248,7 +258,7 @@ function RevenueVsCostChart({ dashboard }: { dashboard: FinancialDashboardData }
       <ResponsiveContainer>
         <ComposedChart data={dashboard.history}>
           <CartesianGrid stroke="rgba(4, 84, 163, 0.10)" vertical={false} />
-          <XAxis dataKey="monthLabel" stroke="#56708f" tickLine={false} axisLine={false} tick={{ fontSize: 11 }} tickMargin={10} />
+          <XAxis dataKey="monthLabel" {...xAxisProps} />
           <YAxis stroke="#56708f" tickLine={false} axisLine={false} />
           <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => formatCurrency(value)} />
           <Legend wrapperStyle={{ color: '#56708f' }} />
@@ -263,24 +273,32 @@ function RevenueVsCostChart({ dashboard }: { dashboard: FinancialDashboardData }
 
 function ForecastChart({ dashboard }: { dashboard: FinancialDashboardData }) {
   const history = dashboard.combinedTimeline.filter((point) => point.phase === 'historico');
-  const forecast = dashboard.combinedTimeline.filter((point) => point.phase === 'previsao');
+  const chartData = dashboard.combinedTimeline.map((point) => ({
+    ...point,
+    revenueHistorical: point.phase === 'historico' ? point.revenue : null,
+    revenueForecast: point.phase === 'previsao' ? point.revenue : null,
+    costHistorical: point.phase === 'historico' ? point.cost : null,
+    costForecast: point.phase === 'previsao' ? point.cost : null,
+    marginHistorical: point.phase === 'historico' ? point.margin : null,
+    marginForecast: point.phase === 'previsao' ? point.margin : null,
+  }));
 
   return (
-    <div className="h-96 w-full">
+    <div className="mx-auto h-80 w-full max-w-5xl">
       <ResponsiveContainer>
-        <LineChart data={dashboard.combinedTimeline}>
+        <LineChart data={chartData} margin={{ top: 12, right: 16, left: 0, bottom: 8 }}>
           <CartesianGrid stroke="rgba(4, 84, 163, 0.10)" vertical={false} />
-          <XAxis dataKey="monthLabel" stroke="#56708f" tickLine={false} axisLine={false} tick={{ fontSize: 11 }} tickMargin={10} />
+          <XAxis dataKey="monthLabel" {...xAxisProps} />
           <YAxis stroke="#56708f" tickLine={false} axisLine={false} />
           <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => formatCurrency(value)} />
           <Legend wrapperStyle={{ color: '#56708f' }} />
           <ReferenceLine x={history.at(-1)?.monthLabel} stroke="#ff9f1c" strokeDasharray="6 6" />
-          <Line data={history} type="monotone" dataKey="revenue" stroke="#0454a3" strokeWidth={3} dot={{ r: 3 }} name="Receita historica" />
-          <Line data={forecast} type="monotone" dataKey="revenue" stroke="#0454a3" strokeWidth={3} strokeDasharray="6 6" dot={{ r: 3 }} name="Receita prevista" />
-          <Line data={history} type="monotone" dataKey="cost" stroke="#ff9f1c" strokeWidth={3} dot={{ r: 3 }} name="Custo historico" />
-          <Line data={forecast} type="monotone" dataKey="cost" stroke="#ff9f1c" strokeWidth={3} strokeDasharray="6 6" dot={{ r: 3 }} name="Custo previsto" />
-          <Line data={history} type="monotone" dataKey="margin" stroke="#22c55e" strokeWidth={3} dot={{ r: 3 }} name="Margem historica" />
-          <Line data={forecast} type="monotone" dataKey="margin" stroke="#22c55e" strokeWidth={3} strokeDasharray="6 6" dot={{ r: 3 }} name="Margem prevista" />
+          <Line type="monotone" dataKey="revenueHistorical" stroke="#0454a3" strokeWidth={3} dot={{ r: 3 }} connectNulls={false} name="Receita historica" />
+          <Line type="monotone" dataKey="revenueForecast" stroke="#0454a3" strokeWidth={3} strokeDasharray="6 6" dot={{ r: 3 }} connectNulls={false} name="Receita prevista" />
+          <Line type="monotone" dataKey="costHistorical" stroke="#ff9f1c" strokeWidth={3} dot={{ r: 3 }} connectNulls={false} name="Custo historico" />
+          <Line type="monotone" dataKey="costForecast" stroke="#ff9f1c" strokeWidth={3} strokeDasharray="6 6" dot={{ r: 3 }} connectNulls={false} name="Custo previsto" />
+          <Line type="monotone" dataKey="marginHistorical" stroke="#22c55e" strokeWidth={3} dot={{ r: 3 }} connectNulls={false} name="Margem historica" />
+          <Line type="monotone" dataKey="marginForecast" stroke="#22c55e" strokeWidth={3} strokeDasharray="6 6" dot={{ r: 3 }} connectNulls={false} name="Margem prevista" />
         </LineChart>
       </ResponsiveContainer>
     </div>
