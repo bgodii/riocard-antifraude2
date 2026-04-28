@@ -1,0 +1,9 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: riocard-antifraude2:latest
+    ports:
+      - "5173:80"
+    restart: unless-stopped

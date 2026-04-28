@@ -1,0 +1,9 @@
+node_modules
+.git
+.vercel
+coverage
+*.log
+*.tsbuildinfo
+artifacts
+oci-icons-official.pptx
+oci_icon_extract
