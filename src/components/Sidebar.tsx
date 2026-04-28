@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { AlertTriangle, BarChart3, BellDot, Bot, CircleDollarSign, Menu, ScanSearch, ShieldAlert, Ticket, Users, X } from 'lucide-react';
+import { Activity, AlertTriangle, BarChart3, BellDot, Bot, CircleDollarSign, Menu, ScanSearch, ShieldAlert, Ticket, Users, X } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import riocardMaisLogo from '@/assets/riocard-mais-logo.svg';
 import { useMonitoringData } from '@/context/MonitoringDataContext';
@@ -14,6 +14,7 @@ const navItems = [
   { to: '/acoes-risco', label: 'Acoes de Risco', icon: AlertTriangle },
   { to: '/financeiro', label: 'Financeiro & Previsao', icon: CircleDollarSign },
   { to: '/copilot', label: 'Copilot', icon: Bot },
+  { to: '/observabilidade', label: 'Observabilidade & Validacao', icon: Activity },
 ];
 
 interface SidebarProps {
