@@ -26,9 +26,9 @@ import {
 import { CardResumo } from '@/components/CardResumo';
 import { FileUpload } from '@/components/FileUpload';
 import { PageHeader } from '@/components/PageHeader';
+import { useFinancialData } from '@/context/FinancialDataContext';
 import {
   buildFinancialDashboard,
-  demoFinancialEntries,
   buildFinancialFilterOptions,
   demoFinancialRows,
   normalizeFinancialRows,
@@ -306,10 +306,9 @@ function ForecastChart({ dashboard }: { dashboard: FinancialDashboardData }) {
 }
 
 export function FinancialPage() {
-  const [entries, setEntries] = useState(() => [] as typeof demoFinancialEntries);
+  const { entries, setFinancialEntries, sourceLabel } = useFinancialData();
   const [filters, setFilters] = useState<FinancialFilterState>(initialFilters);
   const [uploading, setUploading] = useState(false);
-  const [sourceLabel, setSourceLabel] = useState('Nenhuma base financeira carregada');
   const [error, setError] = useState<string | null>(null);
 
   const filterOptions = useMemo(() => buildFinancialFilterOptions(entries), [entries]);
@@ -327,8 +326,7 @@ export function FinancialPage() {
         throw new Error('Nao foi possivel identificar linhas validas na base financeira enviada.');
       }
 
-      setEntries(nextEntries);
-      setSourceLabel(`Arquivo carregado: ${file.name}`);
+      setFinancialEntries(nextEntries, `Arquivo carregado: ${file.name}`);
       setFilters(initialFilters);
     } catch (uploadError) {
       setError(uploadError instanceof Error ? uploadError.message : 'Nao foi possivel processar a base financeira.');
@@ -341,8 +339,7 @@ export function FinancialPage() {
     setUploading(true);
 
     window.setTimeout(() => {
-      setEntries(normalizeFinancialRows(demoFinancialRows));
-      setSourceLabel('Base financeira demonstrativa carregada');
+      setFinancialEntries(normalizeFinancialRows(demoFinancialRows), 'Base financeira demonstrativa carregada');
       setFilters(initialFilters);
       setError(null);
       setUploading(false);
